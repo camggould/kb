@@ -164,6 +164,27 @@ These are structural, not metadata, and remain hardcoded:
 - Query parameters: `dateFrom`, `dateTo`, `limit`
 - Behavioral logic: `detectWorkspace()` auto-detection, `findBacklinks()` cross-note query
 
+## Integration with ws-cli / ws-mcp
+
+`kb` integrates with [ws-cli](https://github.com/camggould/ws-cli) and [ws-mcp](https://github.com/camggould/ws-mcp) for workspace-aware note capture. When adding a note, `kb` automatically detects the current workspace by walking up the directory tree looking for a `.workspace.yaml` file (the same format used by `ws-cli`). The detected workspace name is stored in the note's `workspace` metadata field.
+
+This means notes created inside a workspace are automatically tagged with that workspace — no `--workspace` flag needed:
+
+```bash
+cd ~/projects/my-app   # contains .workspace.yaml with name: my-app
+kb add my-kb -t "Bug fix approach" -b "Use retry logic for transient failures."
+# workspace: "my-app" is set automatically
+```
+
+You can then filter notes by workspace in both the CLI and MCP:
+
+```bash
+kb notes my-kb --workspace my-app
+kb search my-kb "retry" --workspace my-app
+```
+
+When both `kb` and `ws-mcp` are registered as MCP servers, an LLM can use `ws-mcp` to discover the active workspace and pass it to `kb_add_note`, or rely on the CLI's auto-detection when invoked from within a workspace directory.
+
 ## Global Registry
 
 KBs are tracked in `~/.config/kb/registry.json`, mapping names to absolute paths. The KB name is the folder name (e.g., `/home/user/cooking-kb` → `cooking-kb`).
