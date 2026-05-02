@@ -1,6 +1,6 @@
 {
   "name": "kb",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Zettelkasten-style atomic knowledge base CLI + MCP server",
   "type": "module",
   "main": "dist/index.js",
